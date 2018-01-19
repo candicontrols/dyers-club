@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "End to end sample for integrating Node.js application on Google Cloud Platform with CANDI PubSub",
   "repository": "https://github.com/candicontrols/pubSub-Node-example",
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "node app.js",
     "e2e": "rm -rf node_modules/ &&  samples test build --deploy --timeout 20m --builderProject $GCLOUD_PROJECT",
