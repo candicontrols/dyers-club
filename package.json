@@ -1,9 +1,9 @@
 {
-  "name": "nodejs-getting-started",
+  "name": "PubSub Node Example",
   "version": "1.0.0",
-  "description": "End to end sample for running Node.js applications on Google Cloud Platform",
-  "repository": "https://github.com/GoogleCloudPlatform/nodejs-getting-started",
-  "private": true,
+  "description": "End to end sample for integrating Node.js application on Google Cloud Platform with CANDI PubSub",
+  "repository": "https://github.com/candicontrols/pubSub-Node-example",
+  "private": false,
   "scripts": {
     "start": "node app.js",
     "e2e": "rm -rf node_modules/ &&  samples test build --deploy --timeout 20m --builderProject $GCLOUD_PROJECT",
@@ -11,23 +11,11 @@
     "cover": "nyc --cache npm test; nyc report --reporter=html",
     "init-cloudsql": "node devices/model-cloudsql.js"
   },
-  "author": "Google Inc.",
+  "author": "Candi Controls Inc.",
   "contributors": [
     {
-      "name": "Jon Wayne Parrott",
-      "email": "jonwayne@google.com"
-    },
-    {
-      "name": "Jonathan Simon",
-      "email": "jbsimon@google.com"
-    },
-    {
-      "name": "Jason Dobry",
-      "email": "jdobry@google.com"
-    },
-    {
-      "name": "Ace Nassri",
-      "email": "anassri@google.com"
+      "name": "Kevin Dyer",
+      "email": "thedude136895@gmail.com"
     }
   ],
   "cloud-repo-tools": {

@@ -21,9 +21,9 @@ const PubSub = require('@google-cloud/pubsub');
 
 
 //*** Pull Subscription ***//
-const projectId = 'candi-dev';
-const subscriptionName = 'Dyer-Club-PULL.APT_GOOGLE_PUBSUB.subscription.114';
-const keyFilename = '/Users/kevind/candi/dyers-club/google-cloud-auth.json';
+const projectId = 'your-gcloud-project-id';
+const subscriptionName = 'your-subscription-name';
+const keyFilename = '/path/to/your/service-account-auth-key.json';
 
 // Instantiates a client
 const pubsub = PubSub({
