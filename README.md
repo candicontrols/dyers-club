@@ -6,7 +6,7 @@
     3. List all data that has been pushed or pulled from https://{yourDomain}/devices
 
 # Google Pub/Sub Overview Documentation
-    https://candicontrols.atlassian.net/wiki/spaces/DOCS/pages/54460420/Google+Pub+Sub+Overview
+    https://candicontrols.atlassian.net/wiki/spaces/PAR/pages/190873601/Google+Pub+Sub+Overview
 
 # Simple Setup instructions
 
