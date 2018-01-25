@@ -1,5 +1,5 @@
 {
-  "name": "PubSub Node Example",
+  "name": "pubsub_node_example",
   "version": "1.0.0",
   "description": "End to end sample for integrating Node.js application on Google Cloud Platform with CANDI PubSub",
   "repository": "https://github.com/candicontrols/pubSub-Node-example",
@@ -42,6 +42,7 @@
     ]
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^1.0.0",
     "@google-cloud/datastore": "1.1.0",
     "@google-cloud/pubsub": "^0.15.0",
     "body-parser": "1.18.2",

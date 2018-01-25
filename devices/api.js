@@ -18,12 +18,20 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 // Imports the Google Cloud client library
 const PubSub = require('@google-cloud/pubsub');
+// const BigQuery = require('@google-cloud/bigquery');
 
 
+//TODO: replace with generic values for example code
 //*** Pull Subscription ***//
-const projectId = 'your-gcloud-project-id';
+// const projectId = 'your-gcloud-project-id';
+// const subscriptionName = 'your-subscription-name';
+// const keyFilename = '/path/to/your/service-account-auth-key.json';
+
+const projectId = 'kevins-club-1510687140500';
 const subscriptionName = 'your-subscription-name';
-const keyFilename = '/path/to/your/service-account-auth-key.json';
+const keyFilename = '/Users/kevind/candi/pubSub-Node-example/kevins-club-bd3448fdbf74.json';
+const datasetId = 'deviceTelemetry';
+const tableId = 'timeSeries';
 
 // Instantiates a client
 const pubsub = PubSub({
@@ -31,31 +39,39 @@ const pubsub = PubSub({
   keyFilename: keyFilename
 });
 
+// Creates a client
+// const bigquery = new BigQuery({
+//   projectId: projectId,
+//   keyFilename: keyFilename
+// });
+
+
+//TODO: uncomment
 // Event handler for PubSub messages
-const subscription = pubsub.subscription(subscriptionName);
-let messageCount = 0;
-const messageHandler = (message) => {
-  console.log(`Received message ${message.id}:`);
-  console.log(`\tData: ${message.data}`);
-  console.log(`\tAttributes: ${message.attributes}`);
+// const subscription = pubsub.subscription(subscriptionName);
+// let messageCount = 0;
+// const messageHandler = (message) => {
+//   console.log(`Received message ${message.id}:`);
+//   console.log(`\tData: ${message.data}`);
+//   console.log(`\tAttributes: ${message.attributes}`);
 
-  console.log("message.data.usages: ", message.data && message.data.usages)
-  console.log("message.data.usages: ", message.data && message.data.events)
-  messageCount += 1;
+//   console.log("message.data.usages: ", message.data && message.data.usages)
+//   console.log("message.data.usages: ", message.data && message.data.events)
+//   messageCount += 1;
 
-  // "Ack" (acknowledge receipt of) the message
-  message.ack();
+//   // "Ack" (acknowledge receipt of) the message
+//   message.ack();
 
-  //save to db
-  addDeviceData(message.data, message.publishTime, next);
-};
+//   //save to db
+//   addDeviceData(message.data, message.publishTime, next);
+// };
 
-// Listen for new messages until timeout is hit
-subscription.on(`message`, messageHandler);
-setTimeout(() => {
-  subscription.removeListener('message', messageHandler);
-  console.log(`${messageCount} message(s) received.`);
-}, 30000 * 1000);
+// // Listen for new messages until timeout is hit
+// subscription.on(`message`, messageHandler);
+// setTimeout(() => {
+//   subscription.removeListener('message', messageHandler);
+//   console.log(`${messageCount} message(s) received.`);
+// }, 30000 * 1000);
 
 //*** END of PULL Subscription ***//
 

@@ -94,7 +94,10 @@ function toDatastore (obj, nonIndexed) {
 // pages. The callback is invoked with ``(err, devices, nextPageToken)``.
 // [START list]
 function list (limit, token, cb) {
-  const q = ds.createQuery([kind])
+  const q = ds.createQuery(kind)
+    .order('publishTime', {
+      descending: true,
+    })
     .limit(limit)
 
   ds.runQuery(q, (err, entities, nextQuery) => {
