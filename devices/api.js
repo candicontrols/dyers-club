@@ -18,7 +18,7 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 // Imports the Google Cloud client library
 const PubSub = require('@google-cloud/pubsub');
-// const BigQuery = require('@google-cloud/bigquery');
+const BigQuery = require('@google-cloud/bigquery');
 
 
 //TODO: replace with generic values for example code
@@ -40,10 +40,10 @@ const pubsub = PubSub({
 });
 
 // Creates a client
-// const bigquery = new BigQuery({
-//   projectId: projectId,
-//   keyFilename: keyFilename
-// });
+const bigquery = new BigQuery({
+  projectId: projectId,
+  keyFilename: keyFilename
+});
 
 
 //TODO: uncomment
@@ -93,6 +93,43 @@ function addDeviceData (data, publishTime, next) {
   })
 }
 
+//Save each data point to bigquery
+function saveToBigQuery (dataPacket={}, publishTime, attributes={}) {
+  const {usages = []} = dataPacket || {}
+  const rows = usages.map(dataPoint => {
+    return {
+      deviceCd: dataPoint.deviceCd,
+      usageType: dataPoint.usageType,
+      intervalType: dataPoint.intervalType,
+      value: dataPoint.value,
+      timestamp: dataPoint.timestamp,
+      siteCd: attributes.siteCd,
+      gatewayCd: attributes.gatewayCd,
+      publishTime: publishTime || moment().format()
+    }
+  })
+  
+  console.log("inserting rows: ", rows)
+  
+  bigquery
+    .dataset(datasetId)
+    .table(tableId)
+    .insert(rows, (err, apiResponse) => {
+      if (err) {
+        console.error("An API error or partial failure occurred.");
+
+        if (err.name === 'PartialFailureError') {
+          console.error("PartialFailureError: Some rows failed to insert, while others may have succeeded.");
+          console.log("err.errors[0]: ", err.errors[0])
+          // err.errors (object[]):
+          // err.errors[].row (original row object passed to `insert`)
+          // err.errors[].errors[].reason
+          // err.errors[].errors[].message
+        }
+      }
+    })
+}
+
 const router = express.Router();
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
@@ -103,6 +140,9 @@ router.post('/_ah/push-handlers/time-series/telemetry', (req, res, next) => {
   const entryData = reqBody &&
     reqBody.message &&
     reqBody.message.data;
+  const attributes = reqBody &&
+    reqBody.message &&
+    reqBody.message.attributes || {}
   let decodedData;
   let dataObj;
   let entry;
@@ -111,6 +151,12 @@ router.post('/_ah/push-handlers/time-series/telemetry', (req, res, next) => {
     decodedData = Buffer.from(entryData, 'base64');
     dataObj = JSON.parse(decodedData.toString());
 
+    console.log("dataObj usages: ", dataObj && dataObj.usages)
+    console.log("reqBody.messages.attributes: ", attributes)
+    console.log("--")
+    console.log("--")
+
+    saveToBigQuery(dataObj, reqBody.publishTime, attributes)
     addDeviceData(dataObj, reqBody.publishTime, next);
 
     res.status(200).send('OK');
