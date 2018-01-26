@@ -13,7 +13,17 @@
 
 extends ../base.pug
 
+
 block content
+  iframe(
+    width="1200",
+    height="900",
+    src="https://datastudio.google.com/embed/reporting/1XfN6Tlb0W3oEihQMgrXID_WujilYNNm_/page/1psM",
+    frameborder="0",
+    style="border:0",
+    allowfullscreen
+  )
+
   h3 Data Packets
 
   each device in devices
