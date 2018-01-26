@@ -35,14 +35,14 @@ const tableId = 'timeSeries';
 
 // Instantiates a client
 const pubsub = PubSub({
-  projectId: projectId,
-  keyFilename: keyFilename
+  projectId: projectId
+  // keyFilename: keyFilename
 });
 
 // Creates a client
 const bigquery = new BigQuery({
-  projectId: projectId,
-  keyFilename: keyFilename
+  projectId: projectId
+  // keyFilename: keyFilename
 });
 
 
