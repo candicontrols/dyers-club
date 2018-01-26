@@ -46,6 +46,7 @@ router.get('/', (req, res, next) => {
 
     const nextEntities = entities.map(entity => {
       const createdAt = moment(entity.publishTime)
+
       return {
         id: entity.id,
         createdAt: createdAt.format('MMM D, YYYY h:mm:ss a'),
@@ -56,12 +57,9 @@ router.get('/', (req, res, next) => {
       }
     })
 
-    const sortedEntries = _.sortBy(nextEntities, e => {
-      return moment(e.publishTime).valueOf()
-    }).reverse()
 
     res.render('devices/list.pug', {
-      devices: sortedEntries,
+      devices: nextEntities,
       nextPageToken: cursor
     });
   });
