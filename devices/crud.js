@@ -15,7 +15,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const _ = require('underscore');
 
 function getModel () {
@@ -45,7 +45,7 @@ router.get('/', (req, res, next) => {
     }
 
     const nextEntities = entities.map(entity => {
-      const createdAt = moment(entity.publishTime)
+      const createdAt = moment.tz(entity.publishTime, "America/Los_Angeles")
 
       return {
         id: entity.id,
