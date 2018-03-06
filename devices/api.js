@@ -137,6 +137,8 @@ function saveToBigQuery (dataPacket={}, publishTime, attributes={}) {
 const router = express.Router();
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
 //Telemetry Push Subscription Web hook
 router.post('/_ah/push-handlers/time-series/telemetry', (req, res, next) => {
