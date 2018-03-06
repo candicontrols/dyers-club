@@ -24,7 +24,7 @@ function getModel () {
 
 const router = express.Router();
 // Automatically parse request body as form data
-router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
 
 // Set Content-Type for all responses for these routes
 router.use((req, res, next) => {
