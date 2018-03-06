@@ -95,8 +95,10 @@ function addDeviceData (data, publishTime, next) {
 
 //Save each data point to bigquery
 function saveToBigQuery (dataPacket={}, publishTime, attributes={}) {
-  const {usages = []} = dataPacket || {}
-  const rows = usages.map(dataPoint => {
+  const {usages = [], events=[]} = dataPacket || {}
+
+  //TODO: add events if they exist
+  const rows = [...usages].map(dataPoint => {
     return {
       deviceCd: dataPoint.deviceCd,
       usageType: dataPoint.usageType,
@@ -111,23 +113,25 @@ function saveToBigQuery (dataPacket={}, publishTime, attributes={}) {
   
   console.log("inserting rows: ", rows)
   
-  bigquery
-    .dataset(datasetId)
-    .table(tableId)
-    .insert(rows, (err, apiResponse) => {
-      if (err) {
-        console.error("An API error or partial failure occurred.");
+  if (rows && rows.length > 0) {
+    bigquery
+      .dataset(datasetId)
+      .table(tableId)
+      .insert(rows, (err, apiResponse) => {
+        if (err) {
+          console.error("An API error or partial failure occurred.");
 
-        if (err.name === 'PartialFailureError') {
-          console.error("PartialFailureError: Some rows failed to insert, while others may have succeeded.");
-          console.log("err.errors[0]: ", err.errors[0])
-          // err.errors (object[]):
-          // err.errors[].row (original row object passed to `insert`)
-          // err.errors[].errors[].reason
-          // err.errors[].errors[].message
+          if (err.name === 'PartialFailureError') {
+            console.error("PartialFailureError: Some rows failed to insert, while others may have succeeded.");
+            console.log("err.errors[0]: ", err.errors[0])
+            // err.errors (object[]):
+            // err.errors[].row (original row object passed to `insert`)
+            // err.errors[].errors[].reason
+            // err.errors[].errors[].message
+          }
         }
-      }
-    })
+      })
+  }
 }
 
 const router = express.Router();
@@ -151,13 +155,16 @@ router.post('/_ah/push-handlers/time-series/telemetry', (req, res, next) => {
     decodedData = Buffer.from(entryData, 'base64');
     dataObj = JSON.parse(decodedData.toString());
 
-    console.log("dataObj usages: ", dataObj && dataObj.usages)
-    console.log("reqBody.messages.attributes: ", attributes)
+    console.log("dataObj dataObj: ", dataObj)
+    // console.log("dataObj usages: ", dataObj && dataObj.usages)
+    // console.log("reqBody.messages.attributes: ", attributes)
     console.log("--")
     console.log("--")
 
-    saveToBigQuery(dataObj, reqBody.publishTime, attributes)
-    addDeviceData(dataObj, reqBody.publishTime, next);
+    if (dataObj) {
+      saveToBigQuery(dataObj, reqBody.publishTime, attributes)
+      addDeviceData(dataObj, reqBody.publishTime, next);
+    }
 
     res.status(200).send('OK');
   } else {
