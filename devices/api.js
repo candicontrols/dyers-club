@@ -136,9 +136,8 @@ function saveToBigQuery (dataPacket={}, publishTime, attributes={}) {
 const router = express.Router();
 // Automatically parse request body as JSON
 router.use(bodyParser.json({
-  limit: '50mb',
-  parameterLimit: 100000,
-  type: 'application/json'}));
+  limit: 50000000
+}));
 router.use(bodyParser.urlencoded({
   parameterLimit: 100000,
   limit: '50mb',
