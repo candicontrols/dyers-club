@@ -161,13 +161,14 @@ router.post('/_ah/push-handlers/time-series/telemetry', (req, res, next) => {
     decodedData = Buffer.from(entryData, 'base64');
     dataObj = JSON.parse(decodedData.toString());
 
-    console.log("dataObj dataObj: ", dataObj)
+    // console.log("dataObj dataObj: ", dataObj)
     // console.log("dataObj usages: ", dataObj && dataObj.usages)
     // console.log("reqBody.messages.attributes: ", attributes)
     console.log("--")
     console.log("--")
 
-    if (dataObj) {
+    //NOTE: need to add events
+    if (dataObj && dataObj.usages) {
       saveToBigQuery(dataObj, reqBody.publishTime, attributes)
       addDeviceData(dataObj, reqBody.publishTime, next);
     }
